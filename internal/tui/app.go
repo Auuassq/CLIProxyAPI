@@ -14,6 +14,7 @@ import (
 // Tab identifiers
 const (
 	tabDashboard = iota
+	tabUsage
 	tabConfig
 	tabAuthFiles
 	tabAPIKeys
@@ -35,6 +36,7 @@ type App struct {
 	authConnecting bool
 
 	dashboard dashboardModel
+	usage     usageModel
 	config    configTabModel
 	auth      authTabModel
 	keys      keysTabModel
@@ -48,7 +50,7 @@ type App struct {
 	ready  bool
 
 	// Track which tabs have been initialized (fetched data)
-	initialized [6]bool
+	initialized [7]bool
 }
 
 type authConnectMsg struct {
@@ -75,13 +77,14 @@ func NewApp(port int, secretKey string, hook *LogHook) App {
 		authenticated: !authRequired,
 		authInput:     ti,
 		dashboard:     newDashboardModel(client),
+		usage:         newUsageModel(client),
 		config:        newConfigTabModel(client),
 		auth:          newAuthTabModel(client),
 		keys:          newKeysTabModel(client),
 		oauth:         newOAuthTabModel(client),
 		logs:          newLogsTabModel(client, hook),
 		client:        client,
-		initialized: [6]bool{
+		initialized: [7]bool{
 			tabDashboard: true,
 			tabLogs:      true,
 		},
@@ -89,7 +92,7 @@ func NewApp(port int, secretKey string, hook *LogHook) App {
 
 	app.refreshTabs()
 	if authRequired {
-		app.initialized = [6]bool{}
+		app.initialized = [7]bool{}
 	}
 	app.setAuthInputPrompt()
 	return app
@@ -121,6 +124,7 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		contentW := a.width
 		a.dashboard.SetSize(contentW, contentH)
+		a.usage.SetSize(contentW, contentH)
 		a.config.SetSize(contentW, contentH)
 		a.auth.SetSize(contentW, contentH)
 		a.keys.SetSize(contentW, contentH)
@@ -138,7 +142,7 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		a.authenticated = true
 		a.logsEnabled = a.standalone || isLogsEnabledFromConfig(msg.cfg)
 		a.refreshTabs()
-		a.initialized = [6]bool{}
+		a.initialized = [7]bool{}
 		a.initialized[tabDashboard] = true
 		cmds := []tea.Cmd{a.dashboard.Init()}
 		if a.logsEnabled {
@@ -246,6 +250,8 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch a.activeTab {
 	case tabDashboard:
 		a.dashboard, cmd = a.dashboard.Update(msg)
+	case tabUsage:
+		a.usage, cmd = a.usage.Update(msg)
 	case tabConfig:
 		a.config, cmd = a.config.Update(msg)
 	case tabAuthFiles:
@@ -308,6 +314,8 @@ func (a *App) initTabIfNeeded(_ int) tea.Cmd {
 	switch a.activeTab {
 	case tabDashboard:
 		return a.dashboard.Init()
+	case tabUsage:
+		return a.usage.Init()
 	case tabConfig:
 		return a.config.Init()
 	case tabAuthFiles:
@@ -344,6 +352,8 @@ func (a App) View() string {
 	switch a.activeTab {
 	case tabDashboard:
 		sb.WriteString(a.dashboard.View())
+	case tabUsage:
+		sb.WriteString(a.usage.View())
 	case tabConfig:
 		sb.WriteString(a.config.View())
 	case tabAuthFiles:

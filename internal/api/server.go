@@ -34,6 +34,7 @@ import (
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/logging"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/managementasset"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/redisqueue"
+	"github.com/router-for-me/CLIProxyAPI/v7/internal/usagestore"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/util"
 	sdkaccess "github.com/router-for-me/CLIProxyAPI/v7/sdk/access"
 	"github.com/router-for-me/CLIProxyAPI/v7/sdk/api/handlers"
@@ -318,6 +319,8 @@ func NewServer(cfg *config.Config, authManager *auth.Manager, accessManager *sdk
 	hasManagementSecret := cfg.RemoteManagement.SecretKey != "" || envManagementSecret || s.localPassword != ""
 	s.managementRoutesEnabled.Store(hasManagementSecret)
 	redisqueue.SetEnabled(hasManagementSecret || (cfg != nil && cfg.Home.Enabled))
+	redisqueue.SetUsageStatisticsEnabled(cfg != nil && cfg.UsageStatisticsEnabled)
+	usagestore.Configure(cfg)
 	if hasManagementSecret {
 		s.registerManagementRoutes()
 	}
@@ -602,6 +605,8 @@ func (s *Server) registerManagementRoutes() {
 		mgmt.DELETE("/api-keys", s.mgmt.DeleteAPIKeys)
 		mgmt.GET("/api-key-usage", s.mgmt.GetAPIKeyUsage)
 		mgmt.GET("/usage-queue", s.mgmt.GetUsageQueue)
+		mgmt.GET("/usage-summary", s.mgmt.GetUsageSummary)
+		mgmt.DELETE("/usage-summary", s.mgmt.DeleteUsageSummary)
 
 		mgmt.GET("/gemini-api-key", s.mgmt.GetGeminiKeys)
 		mgmt.PUT("/gemini-api-key", s.mgmt.PutGeminiKeys)
@@ -1379,6 +1384,12 @@ func (s *Server) UpdateClients(cfg *config.Config) {
 
 	if oldCfg == nil || oldCfg.UsageStatisticsEnabled != cfg.UsageStatisticsEnabled {
 		redisqueue.SetUsageStatisticsEnabled(cfg.UsageStatisticsEnabled)
+	}
+	if oldCfg == nil ||
+		oldCfg.UsageStatisticsEnabled != cfg.UsageStatisticsEnabled ||
+		oldCfg.AuthDir != cfg.AuthDir ||
+		!reflect.DeepEqual(oldCfg.Billing, cfg.Billing) {
+		usagestore.Configure(cfg)
 	}
 
 	if oldCfg == nil || oldCfg.RedisUsageQueueRetentionSeconds != cfg.RedisUsageQueueRetentionSeconds {

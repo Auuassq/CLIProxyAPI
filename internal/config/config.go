@@ -74,6 +74,9 @@ type Config struct {
 	// Default: 60. Max: 3600.
 	RedisUsageQueueRetentionSeconds int `yaml:"redis-usage-queue-retention-seconds" json:"redis-usage-queue-retention-seconds"`
 
+	// Billing configures optional cost estimates for persisted usage statistics.
+	Billing BillingConfig `yaml:"billing" json:"billing"`
+
 	// DisableCooling disables quota cooldown scheduling when true.
 	DisableCooling bool `yaml:"disable-cooling" json:"disable-cooling"`
 
@@ -204,6 +207,29 @@ type RemoteManagement struct {
 	// PanelGitHubRepository overrides the GitHub repository used to fetch the management panel asset.
 	// Accepts either a repository URL (https://github.com/org/repo) or an API releases endpoint.
 	PanelGitHubRepository string `yaml:"panel-github-repository"`
+}
+
+// BillingConfig holds optional model pricing used for usage cost estimates.
+type BillingConfig struct {
+	// Currency is the display currency for all configured prices.
+	Currency string `yaml:"currency" json:"currency"`
+	// Prices contains provider/model wildcard pricing rules. Values are costs per 1M tokens.
+	Prices []BillingPrice `yaml:"prices" json:"prices"`
+}
+
+// BillingPrice describes a single provider/model pricing rule. Provider and Model support "*" wildcards.
+type BillingPrice struct {
+	Provider                   string  `yaml:"provider,omitempty" json:"provider,omitempty"`
+	Model                      string  `yaml:"model" json:"model"`
+	InputPer1M                 float64 `yaml:"input-per-1m" json:"input-per-1m"`
+	OutputPer1M                float64 `yaml:"output-per-1m" json:"output-per-1m"`
+	CachedInputPer1M           float64 `yaml:"cached-input-per-1m,omitempty" json:"cached-input-per-1m,omitempty"`
+	CacheReadInputPer1M        float64 `yaml:"cache-read-input-per-1m,omitempty" json:"cache-read-input-per-1m,omitempty"`
+	CacheCreationInputPer1M    float64 `yaml:"cache-creation-input-per-1m,omitempty" json:"cache-creation-input-per-1m,omitempty"`
+	ReasoningOutputPer1M       float64 `yaml:"reasoning-output-per-1m,omitempty" json:"reasoning-output-per-1m,omitempty"`
+	RequestPer1K               float64 `yaml:"request-per-1k,omitempty" json:"request-per-1k,omitempty"`
+	SuccessfulRequestOnly      bool    `yaml:"successful-request-only,omitempty" json:"successful-request-only,omitempty"`
+	IncludeFailedRequestTokens bool    `yaml:"include-failed-request-tokens,omitempty" json:"include-failed-request-tokens,omitempty"`
 }
 
 // QuotaExceeded defines the behavior when API quota limits are exceeded.

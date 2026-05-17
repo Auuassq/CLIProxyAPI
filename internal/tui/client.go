@@ -256,6 +256,19 @@ func (c *Client) GetAPIKeys() ([]string, error) {
 	return result, nil
 }
 
+// GetUsageSummary fetches persisted usage statistics for a time window.
+func (c *Client) GetUsageSummary(since string) (map[string]any, error) {
+	query := url.Values{}
+	if strings.TrimSpace(since) != "" {
+		query.Set("since", since)
+	}
+	path := "/v0/management/usage-summary"
+	if encoded := query.Encode(); encoded != "" {
+		path += "?" + encoded
+	}
+	return c.getJSON(path)
+}
+
 // AddAPIKey adds a new API key by sending old=nil, new=key which appends.
 func (c *Client) AddAPIKey(key string) error {
 	body := map[string]any{"old": nil, "new": key}
