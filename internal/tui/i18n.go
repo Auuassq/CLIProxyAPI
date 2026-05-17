@@ -50,8 +50,8 @@ var locales = map[string]map[string]string{
 // ──────────────────────────────────────────
 // Tab names
 // ──────────────────────────────────────────
-var zhTabNames = []string{"仪表盘", "配置", "认证文件", "API 密钥", "OAuth", "日志"}
-var enTabNames = []string{"Dashboard", "Config", "Auth Files", "API Keys", "OAuth", "Logs"}
+var zhTabNames = []string{"仪表盘", "用量", "配置", "认证文件", "API 密钥", "OAuth", "日志"}
+var enTabNames = []string{"Dashboard", "Usage", "Config", "Auth Files", "API Keys", "OAuth", "Logs"}
 
 // TabNames returns tab names in the current locale.
 func TabNames() []string {
@@ -183,25 +183,28 @@ var zhStrings = map[string]string{
 	"oauth_waiting":      "  等待认证中...",
 
 	// ── Usage ──
-	"usage_title":         "📈 使用统计",
-	"usage_help":          " [r] 刷新 • [↑↓] 滚动",
-	"usage_no_data":       "  使用数据不可用",
-	"usage_total_reqs":    "总请求数",
-	"usage_total_tokens":  "总 Token 数",
-	"usage_success":       "成功",
-	"usage_failure":       "失败",
-	"usage_total_token_l": "总Token",
-	"usage_rpm":           "RPM",
-	"usage_tpm":           "TPM",
-	"usage_req_by_hour":   "请求趋势 (按小时)",
-	"usage_tok_by_hour":   "Token 使用趋势 (按小时)",
-	"usage_req_by_day":    "请求趋势 (按天)",
-	"usage_api_detail":    "API 详细统计",
-	"usage_input":         "输入",
-	"usage_output":        "输出",
-	"usage_cached":        "缓存",
-	"usage_reasoning":     "思考",
-	"usage_time":          "时间",
+	"usage_title":          "📈 使用统计",
+	"usage_help":           " [r] 刷新 • [↑↓] 滚动",
+	"usage_no_data":        "  使用数据不可用",
+	"usage_total_reqs":     "总请求数",
+	"usage_total_tokens":   "总 Token 数",
+	"usage_success":        "成功",
+	"usage_failure":        "失败",
+	"usage_total_token_l":  "总Token",
+	"usage_rpm":            "RPM",
+	"usage_tpm":            "TPM",
+	"usage_req_by_hour":    "请求趋势 (按小时)",
+	"usage_tok_by_hour":    "Token 使用趋势 (按小时)",
+	"usage_req_by_day":     "请求趋势 (按天)",
+	"usage_api_detail":     "API 详细统计",
+	"usage_input":          "输入",
+	"usage_output":         "输出",
+	"usage_cached":         "缓存",
+	"usage_reasoning":      "思考",
+	"usage_time":           "时间",
+	"usage_estimated_cost": "预估费用",
+	"usage_not_priced":     "未配置价格",
+	"usage_token_detail":   "Token 明细",
 
 	// ── Logs ──
 	"logs_title":       "📋 日志",
@@ -335,25 +338,28 @@ var enStrings = map[string]string{
 	"oauth_waiting":      "  Waiting for authentication...",
 
 	// ── Usage ──
-	"usage_title":         "📈 Usage Statistics",
-	"usage_help":          " [r] Refresh • [↑↓] Scroll",
-	"usage_no_data":       "  Usage data not available",
-	"usage_total_reqs":    "Total Requests",
-	"usage_total_tokens":  "Total Tokens",
-	"usage_success":       "Success",
-	"usage_failure":       "Failed",
-	"usage_total_token_l": "Total Tokens",
-	"usage_rpm":           "RPM",
-	"usage_tpm":           "TPM",
-	"usage_req_by_hour":   "Requests by Hour",
-	"usage_tok_by_hour":   "Token Usage by Hour",
-	"usage_req_by_day":    "Requests by Day",
-	"usage_api_detail":    "API Detail Statistics",
-	"usage_input":         "Input",
-	"usage_output":        "Output",
-	"usage_cached":        "Cached",
-	"usage_reasoning":     "Reasoning",
-	"usage_time":          "Time",
+	"usage_title":          "📈 Usage Statistics",
+	"usage_help":           " [r] Refresh • [↑↓] Scroll",
+	"usage_no_data":        "  Usage data not available",
+	"usage_total_reqs":     "Total Requests",
+	"usage_total_tokens":   "Total Tokens",
+	"usage_success":        "Success",
+	"usage_failure":        "Failed",
+	"usage_total_token_l":  "Total Tokens",
+	"usage_rpm":            "RPM",
+	"usage_tpm":            "TPM",
+	"usage_req_by_hour":    "Requests by Hour",
+	"usage_tok_by_hour":    "Token Usage by Hour",
+	"usage_req_by_day":     "Requests by Day",
+	"usage_api_detail":     "API Detail Statistics",
+	"usage_input":          "Input",
+	"usage_output":         "Output",
+	"usage_cached":         "Cached",
+	"usage_reasoning":      "Reasoning",
+	"usage_time":           "Time",
+	"usage_estimated_cost": "Estimated Cost",
+	"usage_not_priced":     "not priced",
+	"usage_token_detail":   "Token Detail",
 
 	// ── Logs ──
 	"logs_title":       "📋 Logs",

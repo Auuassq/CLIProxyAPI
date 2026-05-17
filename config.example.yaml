@@ -86,6 +86,23 @@ error-logs-max-files: 10
 # When false, disable in-memory usage statistics aggregation
 usage-statistics-enabled: false
 
+# Optional persistent usage billing estimates. Usage records are stored under auth-dir/usage/usage.jsonl
+# when usage-statistics-enabled is true. Prices are per 1M tokens unless noted otherwise.
+# billing:
+#   currency: "USD"
+#   prices:
+#     - provider: "openai"       # optional; supports "*" wildcards
+#       model: "gpt-5*"          # required; supports "*" wildcards
+#       input-per-1m: 1.25
+#       output-per-1m: 10.0
+#       cached-input-per-1m: 0.125
+#     - provider: "claude"
+#       model: "claude-*"
+#       input-per-1m: 3.0
+#       output-per-1m: 15.0
+#       cache-read-input-per-1m: 0.3
+#       cache-creation-input-per-1m: 3.75
+
 # How long (in seconds) Redis usage queue items are retained in memory for the RESP interface (LPOP/RPOP).
 # Note: the in-process Redis RESP usage output is disabled when home.enabled is true.
 # Default: 60. Max: 3600.
